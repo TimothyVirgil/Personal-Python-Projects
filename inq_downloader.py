@@ -16,10 +16,10 @@ import shutil
 import os, winshell
 from win32com.client import Dispatch
 import sys
-
 from selenium import webdriver
 
 #Part 1 - Downloading the pdf
+
 chrome_path = r"C:\bin\chromedriver.exe"
 options = webdriver.ChromeOptions()
 browser = webdriver.Chrome(chrome_path, chrome_options = options)
@@ -31,9 +31,13 @@ login.click()
 time.sleep(10)
 
 email = browser.find_element_by_xpath('//*[@id="auth0-lock-container-1"]/div/div[2]/form/div/div/div[3]/span/div/div/div/div/div/div/div/div/div[2]/div[1]/div/input')
-email.send_keys('username') #must enter username here
+
+#use whatever method to retrieve encrypted un
+email.send_keys('<username>')
 password = browser.find_element_by_xpath('//*[@id="auth0-lock-container-1"]/div/div[2]/form/div/div/div[3]/span/div/div/div/div/div/div/div/div/div[2]/div[2]/div[1]/div/input')
-password.send_keys('password') ##must enter password here
+
+#use whatever method to retrieve encrypted pass
+password.send_keys('<password>')
 login = browser.find_element_by_xpath('//*[@id="auth0-lock-container-1"]/div/div[2]/form/div/div/button/span')
 login.click()
 time.sleep(10)
@@ -42,6 +46,7 @@ digital_edition = browser.find_element_by_xpath('/html/body/div[1]/section/div[2
 browser.execute_script("(arguments[0]).click();", digital_edition)
 time.sleep(10)
 
+#sometimes it was taking me to a random add... this script would bypass that if necessary
 try:
 	cancel = browser.find_element_by_xpath('/html/body/div[35]/div[1]/div/div/div[3]/a[1]')
 	cancel.click()
@@ -56,30 +61,28 @@ ok = browser.find_element_by_xpath('//*[@id="HtmlTag"]/body/div[21]/div[11]/div[
 ok.click()
 
 #Part 2 - Moving the file
-
 #adjust this for your own directories
 
-list_of_files = glob.glob('c://users//cabba//downloads/*.pdf') # * means all if need specific format then *.csv
-bob = len(list_of_files)
+list_of_files = glob.glob('<directory>') # * means all if need specific format then *.csv
+dir_len = len(list_of_files)
 
-while len(list_of_files)==bob:    
-    list_of_files = glob.glob('c://users//cabba//downloads/*.pdf')
+while len(list_of_files)==dir_len:    
+    list_of_files = glob.glob('<directory>')
 
 else:    
 	latest_file = max(list_of_files, key=os.path.getctime)
 	print(latest_file)
-	shutil.move(latest_file,'c://users//cabba//onedrive//documents//Philadelphia Inquirer//')
+	shutil.move(latest_file,'<intended destination>')
 
 #Part 3 - Creating a Desktop Shortcut
 #again, adjust for your own directories.
-
 desktop = winshell.desktop()
-path = os.path.join(desktop, "Good Morning Timmy!.lnk")
-list_of_files = glob.glob('c://users//cabba//onedrive//documents//Philadelphia Inquirer//*.pdf')
+path = os.path.join(desktop, "<name your shortcut here>.lnk")
+list_of_files = glob.glob('<location of file>')
 latest_file = max(list_of_files, key=os.path.getctime) # * means all if need specific format then *.csv
 target = latest_file
-wDir = "c:\\users\\cabba\\onedrive\\documents\\Philadelphia Inquirer\\"
-icon = "c:\\users\\cabba\\onedrive\\pictures\\icons\\news.ico"
+wDir = "<location of file>"
+icon = "<directory of shortcut icon>"
 shell = Dispatch('WScript.Shell')
 shortcut = shell.CreateShortCut(path)
 shortcut.Targetpath = target
